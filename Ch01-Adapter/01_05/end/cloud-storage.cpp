@@ -65,6 +65,28 @@ public:
     const int totalSpace = 15;
 };
 
+class VirtualDriveAdapter: public CloudStorage, private VirtualDrive
+{
+public:
+    virtual bool uploadContents(const string& content) override
+    {
+        return uploadData(content, uuid());
+    }
+
+    virtual int getFreeSpace() override
+    {
+        const int available = totalSpace - usedSpace();
+        cout << "Available VirtualDrive storage: " << available << "GB" << endl;
+        return available;
+    }
+private:
+    int uuid()
+    {
+        const time_t result = time(nullptr);
+        return result;
+    }
+};
+
 int main()
 {
     // Create an array of pointers to CloudStorage objects.
@@ -72,6 +94,7 @@ int main()
     {
         std::make_unique<CloudDrive>(),
         std::make_unique<FastShare>(),
+        make_unique<VirtualDriveAdapter>(),
     };
 
     // Iterate through the array and invoke the uploadContents and getFreeSpace
