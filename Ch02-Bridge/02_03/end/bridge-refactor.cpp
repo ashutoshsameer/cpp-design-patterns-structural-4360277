@@ -11,7 +11,10 @@ public:
 class ITextSharer
 {
 public:
-  explicit ITextSharer(const ITextHandler &handler) : m_textHandler(handler) {}
+  explicit ITextSharer(const ITextHandler &handler)
+  : m_textHandler(handler)
+  {
+  }
 
   bool shareText(const string &text)
   {
