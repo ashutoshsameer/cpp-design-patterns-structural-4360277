@@ -58,17 +58,53 @@ private:
     double m_Side3;
 };
 
+class CompositeShape : public Shape
+{
+public:
+    void addShape(Shape& shape)
+    {
+        m_shapes.push_back(&shape);
+    }
+
+    void removeShape(Shape& shape)
+    {
+        for(auto it=m_shapes.begin();it!=m_shapes.end();it++)
+        {
+            if (&shape==*it)
+            {
+                m_shapes.erase(it);
+                break;
+            }
+        }
+    }
+
+    void draw() const override
+    {
+        for(const auto& shape : m_shapes)
+        {
+            shape->draw();
+        }
+    }
+private:
+    vector<Shape*> m_shapes;
+};
+
 int main()
 {
-    vector<Shape *> shapes{
-        new Circle(5),
-        new Rectangle(10, 20),
-        new Triangle(3, 4, 5)};
+    Circle c(5);
+    Rectangle r(10, 20);
+    Triangle t(3, 4, 5);
 
-    for (const auto &shape : shapes)
-    {
-        shape->draw();
-    }
+    CompositeShape cs;
+    cs.addShape(c);
+    cs.addShape(r);
+    cs.addShape(t);
+    
+    cs.draw();
+
+    cs.removeShape(r);
+
+    cs.draw();
 
     return 0;
 }
