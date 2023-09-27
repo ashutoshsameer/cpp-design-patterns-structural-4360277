@@ -66,7 +66,7 @@ public:
         m_shapes.push_back(&shape);
     }
 
-    void removeShape(Shape& shape)
+    void removeShape(const Shape& shape)
     {
         for(auto it=m_shapes.begin();it!=m_shapes.end();it++)
         {
