@@ -51,17 +51,94 @@ public:
     }
 };
 
+class ToppingDecorator : public Pizza
+{
+public:
+    explicit ToppingDecorator(unique_ptr<Pizza> pizza): m_pizza(std::move(pizza)) {};
+    
+    string description() const
+    {
+        return m_pizza->description();
+    }
+
+    double price() const
+    {
+        return m_pizza->price();
+    }
+
+    // virtual ~ToppingDecorator() = default;
+
+protected:
+    const unique_ptr<Pizza> m_pizza;
+};
+
+class MushroomDecorator : public ToppingDecorator
+{
+public:
+    explicit MushroomDecorator(unique_ptr<Pizza> pizza): ToppingDecorator(std::move(pizza)) {}
+
+    string description() const
+    {
+        return ToppingDecorator::description() + " with mushrooms";
+    }
+
+    double price() const
+    {
+        return ToppingDecorator::price() + 0.99;
+    } 
+};
+
+class TomatoDecorator : public ToppingDecorator
+{
+public:
+    explicit TomatoDecorator(unique_ptr<Pizza> pizza): ToppingDecorator(std::move(pizza)) {}
+
+    string description() const
+    {
+        return ToppingDecorator::description() + ", plus tomatoes";
+    }
+
+    double price() const
+    {
+        return ToppingDecorator::price() + 0.79;
+    } 
+};
+
+class ExtraCheeseDecorator : public ToppingDecorator
+{
+public:
+    explicit ExtraCheeseDecorator(unique_ptr<Pizza> pizza): ToppingDecorator(std::move(pizza)) {}
+
+    string description() const
+    {
+        return ToppingDecorator::description() + ", plus extra cheese";
+    }
+
+    double price() const
+    {
+        return ToppingDecorator::price() + 1.99;
+    } 
+};
+
 int main()
 {
-    const std::unique_ptr<Pizza> pizzas[]{
-        make_unique<MargheritaPizza>(),
-        make_unique<PepperoniPizza>(),
-        make_unique<HawaiianPizza>()};
+    auto margheritaPizza = make_unique<MargheritaPizza>();
+    auto margheritaPizzaWithMushrooms = make_unique<MushroomDecorator>(std::move(margheritaPizza));
+    auto margheritaPizzaWithMushroomsEC = make_unique<ExtraCheeseDecorator>(std::move(margheritaPizzaWithMushrooms));
 
-    for (const auto &pizza : pizzas)
-    {
-        cout << pizza->description() << " costs $" << pizza->price() << endl;
-    }
+    cout << margheritaPizzaWithMushroomsEC->description() << " costs $" << margheritaPizzaWithMushroomsEC->price() << endl;
+
+    // auto pepperoniPizza = make_unique<PepperoniPizza>();
+
+    // const std::unique_ptr<Pizza> pizzas[]{
+    //     make_unique<MargheritaPizza>(),
+    //     make_unique<PepperoniPizza>(),
+    //     make_unique<HawaiianPizza>()};
+
+    // for (const auto &pizza : pizzas)
+    // {
+    //     cout << pizza->description() << " costs $" << pizza->price() << endl;
+    // }
 
     return 0;
 }
