@@ -24,9 +24,35 @@ private:
     const string m_Contents;
 };
 
+class SecureStorageProxy : public Storage
+{
+public:
+    explicit SecureStorageProxy(const string &data, const int code): storage(make_unique<SecureStorage>(data)), code(code)
+    {
+
+    }
+
+    const string getContents() override
+    {
+        if (authorized()) {
+            return storage->getContents();
+        }
+        return "Unauthorized";
+    }
+
+private:
+    bool authorized() {
+        return code == 47;
+    }
+
+    unique_ptr<SecureStorage> storage;
+    int code;
+};
+
 int main()
 {
-    SecureStorage secureStorage("Top Secret Information");
+    // SecureStorage secureStorage("Top Secret Information");
+    SecureStorageProxy secureStorage("Top Secret Information", 47);
 
     // Limit access to sensitive data
     cout << "Sensitive Data: " << secureStorage.getContents() << endl;
