@@ -46,7 +46,7 @@ private:
 class Document
 {
 public:
-    explicit Document(CharacterFactory *factory) : m_factory(factory) {}
+    explicit Document(CharacterFactory * const factory) : m_factory(factory) {}
 
     void insert(char c)
     {
@@ -63,7 +63,7 @@ public:
 
 private:
     std::vector<const Character *> m_chars;
-    CharacterFactory *m_factory;
+    CharacterFactory * const m_factory;
 };
 
 int main()
