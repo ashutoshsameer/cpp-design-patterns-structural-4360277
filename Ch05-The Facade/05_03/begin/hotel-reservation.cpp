@@ -34,8 +34,31 @@ public:
     }
 };
 
+class ReservationSystemFacade
+{
+public:
+    ReservationSystemFacade()
+    : m_database()
+    , m_payment()
+    , m_messaging()
+    {}
+
+    void makeReservation(const string& reservationInfo, const string& paymentInfo)
+    {
+        m_database.storeReservation(reservationInfo);
+        m_payment.processPayment(paymentInfo);
+        m_messaging.sendConfirmation("Reservation Confirmed.");
+    }
+
+private:
+    Database m_database;
+    PaymentGateway m_payment;
+    MessagingService m_messaging;
+};
+
 int main()
 {
+    /*
     Database db;
     PaymentGateway paymentGateway;
     MessagingService messagingService;
@@ -47,6 +70,12 @@ int main()
     paymentGateway.processPayment(paymentInfo);
 
     messagingService.sendConfirmation("Reservation confirmed.");
+    */
+
+   ReservationSystemFacade rsf;
+   const string reservation = "Room reservation info";
+   const string paymentInfo = "Payment info";
+   rsf.makeReservation(reservation, paymentInfo);
 
     return 0;
 }
